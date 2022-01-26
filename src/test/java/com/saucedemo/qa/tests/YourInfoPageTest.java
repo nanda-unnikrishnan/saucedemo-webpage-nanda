@@ -53,7 +53,7 @@ public class YourInfoPageTest extends TestBase {
 	@Override
 	@AfterClass
 	public void tearDown() {
-		// super.tearDown();
+		super.tearDown();
 	}
 
 }
