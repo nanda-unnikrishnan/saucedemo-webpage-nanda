@@ -7,6 +7,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.saucedemo.qa.base.AppConfig;
+import com.saucedemo.qa.pages.CheckoutCompletePage;
 import com.saucedemo.qa.pages.CheckoutOverviewPage;
 import com.saucedemo.qa.pages.LoginPage;
 import com.saucedemo.qa.pages.ProductsPage;
@@ -20,6 +21,7 @@ public class YourInfoPageTest extends TestBase {
 	YourCartPage yourCartPage;
 	YourInfoPage yourInfoPage;
 	CheckoutOverviewPage checkoutOverviewPage;
+	CheckoutCompletePage checkoutCompletePage;
 
 	@Override
 	@BeforeClass
@@ -50,10 +52,17 @@ public class YourInfoPageTest extends TestBase {
 
 	}
 
+	@Test(priority = 3)
+	public void testCheckoutCompletion() {
+		checkoutCompletePage = checkoutOverviewPage.clickOnFinish();
+		assertEquals(checkoutCompletePage.getTitle(), "CHECKOUT: COMPLETE!");
+
+	}
+
 	@Override
 	@AfterClass
 	public void tearDown() {
-		super.tearDown();
+		// super.tearDown();
 	}
 
 }

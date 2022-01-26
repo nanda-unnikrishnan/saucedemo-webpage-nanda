@@ -20,6 +20,9 @@ public class CheckoutOverviewPage extends PageBase {
 	@FindBy(xpath = "//div[@class='summary_subtotal_label']")
 	WebElement itemTotal;
 
+	@FindBy(id = "finish")
+	WebElement finishButton;
+
 	public double calculateTotalPrice() {
 
 		double calculatedPrice = 0.0;
@@ -34,4 +37,8 @@ public class CheckoutOverviewPage extends PageBase {
 		return Double.parseDouble(itemTotal.getText().substring("Item total: $".length()));
 	}
 
+	public CheckoutCompletePage clickOnFinish() {
+		finishButton.click();
+		return new CheckoutCompletePage(getDriver());
+	}
 }
