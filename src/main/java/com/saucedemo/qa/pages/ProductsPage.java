@@ -14,7 +14,7 @@ import com.saucedemo.qa.base.PageBase;
 
 public class ProductsPage extends PageBase {
 
-	Logger logger = LoggerFactory.getLogger(ProductsPage.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductsPage.class);
 
 	private static final String ADD_TO_CART_BUTTON_LABEL = "ADD TO CART";
 
@@ -45,10 +45,9 @@ public class ProductsPage extends PageBase {
 
 	public void printInventoryPrices() {
 		for (WebElement item : inventoryPrices) {
-			logger.info(item.getText());
-			// System.out.println(item.getText());
+			LOGGER.debug(item.getText());
 		}
-		System.out.println("Complete");
+		LOGGER.debug("Complete");
 	}
 
 	public void sortItems(String sortOption) {
@@ -59,9 +58,9 @@ public class ProductsPage extends PageBase {
 	public void addToCart(int itemIndex) {
 		if (addRemoveButtons.get(itemIndex).getText().equals(ADD_TO_CART_BUTTON_LABEL)) {
 			addRemoveButtons.get(itemIndex).click();
-			System.out.println("Item at index [" + itemIndex + "] added to cart\n");
+			LOGGER.info("Item at index [{}] added to cart", itemIndex);
 		} else {
-			System.out.println("\nItem at index [" + itemIndex + "] is already added to cart\n");
+			LOGGER.info("Item at index [{}] is already added to cart", itemIndex);
 		}
 	}
 

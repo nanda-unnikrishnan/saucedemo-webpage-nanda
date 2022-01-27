@@ -5,28 +5,30 @@ import static org.testng.Assert.assertEquals;
 import java.util.Collections;
 import java.util.List;
 
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.*;
 
 import com.saucedemo.qa.base.AppConfig;
-import com.saucedemo.qa.pages.CheckoutCompletePage;
-import com.saucedemo.qa.pages.CheckoutOverviewPage;
-import com.saucedemo.qa.pages.LoginPage;
-import com.saucedemo.qa.pages.ProductsPage;
-import com.saucedemo.qa.pages.YourCartPage;
-import com.saucedemo.qa.pages.YourInfoPage;
+import com.saucedemo.qa.pages.*;
 import com.saucedemo.qa.utils.InventorySortOrder;
 import com.saucedemo.qa.utils.TestBase;
 
 public class UserCheckoutJourneyTest extends TestBase {
 
-	LoginPage loginPage;
-	ProductsPage productsPage;
-	YourCartPage yourCartPage;
-	YourInfoPage yourInfoPage;
-	CheckoutOverviewPage checkoutOverviewPage;
-	CheckoutCompletePage checkoutCompletePage;
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserCheckoutJourneyTest.class);
+
+	private LoginPage loginPage;
+
+	private ProductsPage productsPage;
+
+	private YourCartPage yourCartPage;
+
+	private YourInfoPage yourInfoPage;
+
+	private CheckoutOverviewPage checkoutOverviewPage;
+
+	private CheckoutCompletePage checkoutCompletePage;
 
 	@Override
 	@BeforeMethod
@@ -38,6 +40,7 @@ public class UserCheckoutJourneyTest extends TestBase {
 	public void testUserCheckoutJourney_SecondCostliestAndCheapestItem_Success() {
 		verifyLoginComplete();
 
+		LOGGER.info("Logged in, proceeding to sort now");
 		// Retrieve prices before sorting
 		List<Double> pricesBeforeSorting = productsPage.getInventoryPrices();
 		Collections.sort(pricesBeforeSorting, Collections.reverseOrder());
@@ -47,12 +50,14 @@ public class UserCheckoutJourneyTest extends TestBase {
 		List<Double> pricesAfterSorting = productsPage.getInventoryPrices();
 		assertEquals(pricesAfterSorting, pricesBeforeSorting, "Mismatch in sorted prices");
 
+		LOGGER.info("Sorted items, add items to cart");
 		// Add second costliest item
 		productsPage.addToCart(1);
 		// Add cheapest item
 		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
 
+		LOGGER.info("Proceeding to checkout");
 		initateCheckout();
 
 		verifyCheckoutComplete();
