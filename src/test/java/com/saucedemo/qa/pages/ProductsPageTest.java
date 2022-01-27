@@ -1,4 +1,4 @@
-package com.saucedemo.qa.tests;
+package com.saucedemo.qa.pages;
 
 import static org.testng.Assert.assertEquals;
 
@@ -10,6 +10,7 @@ import com.saucedemo.qa.base.AppConfig;
 import com.saucedemo.qa.pages.LoginPage;
 import com.saucedemo.qa.pages.ProductsPage;
 import com.saucedemo.qa.pages.YourCartPage;
+import com.saucedemo.qa.utils.TestBase;
 
 public class ProductsPageTest extends TestBase {
 

@@ -1,4 +1,4 @@
-package com.saucedemo.qa.tests;
+package com.saucedemo.qa.utils;
 
 public enum InventorySortOrder {
 	BY_PRICE_HIGH_TO_LOW("Price (high to low)"),

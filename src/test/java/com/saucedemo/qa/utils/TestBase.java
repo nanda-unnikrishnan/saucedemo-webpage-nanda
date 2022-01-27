@@ -1,4 +1,4 @@
-package com.saucedemo.qa.tests;
+package com.saucedemo.qa.utils;
 
 import java.util.concurrent.TimeUnit;
 
