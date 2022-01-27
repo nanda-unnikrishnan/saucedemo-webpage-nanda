@@ -25,8 +25,11 @@ public class YourCartPageTest extends TestBase {
 		super.setUp();
 		loginPage = new LoginPage(getDriver());
 		productsPage = loginPage.login(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
-		productsPage.sortBy("Price (high to low)");
-		productsPage.addToCart();
+		productsPage.sortItems("Price (high to low)");
+		// Add second costliest item
+		productsPage.addToCart(1);
+		// Add cheapest item
+		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 		yourCartPage = productsPage.goToCart();
 	}
 

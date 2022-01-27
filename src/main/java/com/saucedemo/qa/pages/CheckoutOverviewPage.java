@@ -10,6 +10,8 @@ import com.saucedemo.qa.base.PageBase;
 
 public class CheckoutOverviewPage extends PageBase {
 
+	private static final int DOLLAR_SIGN_INDEX = 1;
+
 	public CheckoutOverviewPage(WebDriver driver) {
 		super(driver);
 	}
@@ -27,7 +29,7 @@ public class CheckoutOverviewPage extends PageBase {
 
 		double calculatedPrice = 0.0;
 		for (int i = 0; i < inventoryPrices.size(); i++) {
-			calculatedPrice = calculatedPrice + (Double.parseDouble(inventoryPrices.get(i).getText().substring(1)));
+			calculatedPrice = calculatedPrice + (Double.parseDouble(inventoryPrices.get(i).getText().substring(DOLLAR_SIGN_INDEX)));
 		}
 
 		return calculatedPrice;

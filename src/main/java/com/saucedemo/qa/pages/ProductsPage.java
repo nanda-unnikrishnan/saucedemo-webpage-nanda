@@ -1,72 +1,80 @@
 package com.saucedemo.qa.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.Select;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.saucedemo.qa.base.PageBase;
 
 public class ProductsPage extends PageBase {
 
+	Logger logger = LoggerFactory.getLogger(ProductsPage.class);
+
+	private static final String ADD_TO_CART_BUTTON_LABEL = "ADD TO CART";
+
+	private static final int DOLLAR_SIGN_INDEX = 1;
+
 	// Object repository for Products page
 	@FindBy(className = "inventory_item_name")
-	List<WebElement> inventoryList;
+	private List<WebElement> inventoryList;
+
+	@FindBy(xpath = "//div[@class='inventory_item_price']")
+	List<WebElement> inventoryPrices;
 
 	@FindBy(className = "product_sort_container")
-	WebElement sortDropDown;
+	private WebElement sortDropDown;
 
 	@FindBy(xpath = "//a[@class='shopping_cart_link']")
-	WebElement cart;
+	private WebElement cart;
 
 	@FindBy(xpath = "//div[@class='inventory_list']//div//button")
-	List<WebElement> addRemoveButtons;
+	private List<WebElement> addRemoveButtons;
 
 	@FindBy(xpath = "//span[@class='shopping_cart_badge']")
-	WebElement itemsOnCart;
+	private WebElement itemsOnCart;
 
 	public ProductsPage(WebDriver driver) {
 		super(driver);
 	}
 
-	public void displayInventory() {
-		for (WebElement item : inventoryList) {
-			System.out.println(item.getText());
+	public void printInventoryPrices() {
+		for (WebElement item : inventoryPrices) {
+			logger.info(item.getText());
+			// System.out.println(item.getText());
 		}
+		System.out.println("Complete");
 	}
 
-	public List<WebElement> sortBy(String sortOption) {
-
+	public void sortItems(String sortOption) {
 		Select select = new Select(sortDropDown);
 		select.selectByVisibleText(sortOption);
-		return inventoryList;
 	}
 
-	public void addToCart() {
-
-		// This method currently adds the second most expensive and the cheapest items
-		// to the cart.
-		// This can later be modified to select items based on inputs
-
-		int numOfItems = addRemoveButtons.size();
-
-		if (addRemoveButtons.get(1).getText().equals("ADD TO CART")) {
-			addRemoveButtons.get(1).click();
-			System.out.println("\nSecond costliest item added to cart\n");
+	public void addToCart(int itemIndex) {
+		if (addRemoveButtons.get(itemIndex).getText().equals(ADD_TO_CART_BUTTON_LABEL)) {
+			addRemoveButtons.get(itemIndex).click();
+			System.out.println("Item at index [" + itemIndex + "] added to cart\n");
 		} else {
-			System.out.println(addRemoveButtons.get(1).getText());
-			System.out.println("\nSecond costliest item is already added to cart\n");
+			System.out.println("\nItem at index [" + itemIndex + "] is already added to cart\n");
 		}
+	}
 
-		if (addRemoveButtons.get(numOfItems - 1).getText().equals("ADD TO CART")) {
-			addRemoveButtons.get(numOfItems - 1).click();
-			System.out.println("\nCheapest item added to cart\n");
-		} else {
-			System.out.println("\nCheapest item is already added to cart\n");
+	public List<Double> getInventoryPrices() {
+		List<Double> priceValues = new ArrayList<>();
+		for (WebElement inventoryPrice : inventoryPrices) {
+			priceValues.add(Double.valueOf(inventoryPrice.getText().substring(DOLLAR_SIGN_INDEX)));
 		}
+		return priceValues;
+	}
 
+	public int getTotalItemCount() {
+		return addRemoveButtons.size();
 	}
 
 	public int getNumOfItemsOnCart() {
@@ -74,7 +82,6 @@ public class ProductsPage extends PageBase {
 	}
 
 	public YourCartPage goToCart() {
-
 		cart.click();
 		return new YourCartPage(getDriver());
 

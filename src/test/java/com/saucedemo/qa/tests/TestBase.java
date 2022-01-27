@@ -20,12 +20,10 @@ public class TestBase {
 		String browserName = AppConfig.getConfigValue("browser");
 
 		if (browserName.equals("chrome")) {
-			String chromeDriverPath = "D:\\Selenium\\chromedriver_win32\\chromedriver.exe";
-			System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+			System.setProperty("webdriver.chrome.driver", AppConfig.getConfigValue("chrome.driver.location"));
 			driver = new ChromeDriver();
 		} else if (browserName.equals("firefox")) {
-			String geckoDriverPath = "D:\\Selenium\\geckodriver-v0.29.1-win64\\geckodriver.exe";
-			System.setProperty("webdriver.gecko.driver", geckoDriverPath);
+			System.setProperty("webdriver.gecko.driver", AppConfig.getConfigValue("firefox.driver.location"));
 			driver = new FirefoxDriver();
 		}
 
