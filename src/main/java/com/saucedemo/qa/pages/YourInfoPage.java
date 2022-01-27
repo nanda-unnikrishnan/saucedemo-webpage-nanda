@@ -24,6 +24,9 @@ public class YourInfoPage extends PageBase {
 	@FindBy(id = "continue")
 	WebElement continueButton;
 
+	@FindBy(xpath = "//h3//button[@class='error-button']")
+	WebElement errorButton;
+
 	public void enterYourInfo(String firstNameValue, String lastNameValue, String postalCodeValue) {
 		firstName.sendKeys(firstNameValue);
 		lastName.sendKeys(lastNameValue);
@@ -47,6 +50,10 @@ public class YourInfoPage extends PageBase {
 
 	public String getPostalCodeValue() {
 		return postalCode.getAttribute("value");
+	}
+
+	public boolean isValidationErrorPresent() {
+		return errorButton.isDisplayed();
 	}
 
 }

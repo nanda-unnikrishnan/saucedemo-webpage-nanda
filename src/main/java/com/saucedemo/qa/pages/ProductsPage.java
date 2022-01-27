@@ -82,6 +82,14 @@ public class ProductsPage extends PageBase {
 		return priceValues;
 	}
 
+	public List<String> getInventoryNames() {
+		List<String> inventoryNamesValues = new ArrayList<>();
+		for (WebElement element : inventoryNames) {
+			inventoryNamesValues.add(element.getText());
+		}
+		return inventoryNamesValues;
+	}
+
 	public int getTotalItemCount() {
 		return addRemoveButtons.size();
 	}

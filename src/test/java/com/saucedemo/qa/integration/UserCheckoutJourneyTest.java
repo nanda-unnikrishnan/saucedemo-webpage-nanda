@@ -43,11 +43,12 @@ public class UserCheckoutJourneyTest extends TestBase {
 		// Retrieve prices before sorting
 		List<Double> pricesBeforeSorting = productsPage.getInventoryPrices();
 		Collections.sort(pricesBeforeSorting, Collections.reverseOrder());
+		List<Double> sortedPrices = pricesBeforeSorting;
 
 		// Sort items on the page
 		productsPage.sortItems(InventorySortOrder.BY_PRICE_HIGH_TO_LOW.getDescription());
-		List<Double> pricesAfterSorting = productsPage.getInventoryPrices();
-		assertEquals(pricesAfterSorting, pricesBeforeSorting, "Mismatch in sorted prices");
+		List<Double> actualPricesAfterSorting = productsPage.getInventoryPrices();
+		assertEquals(actualPricesAfterSorting, sortedPrices, "Mismatch in sorted prices");
 
 		LOGGER.info("Sorted items, add items to cart.");
 		// Add second costliest item
@@ -62,12 +63,38 @@ public class UserCheckoutJourneyTest extends TestBase {
 	}
 
 	@Test
+	public void testUserCheckoutJourney_SortAtoZ_Success() {
+		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
+
+		List<String> namesBeforeSorting = productsPage.getInventoryNames();
+		Collections.sort(namesBeforeSorting);
+		List<String> sortedNames = namesBeforeSorting;
+
+		// Sort items on the page
+		productsPage.sortItems(InventorySortOrder.BY_NAME_A_TO_Z.getDescription());
+		List<String> actualNamesAfterSorting = productsPage.getInventoryNames();
+		assertEquals(actualNamesAfterSorting, sortedNames, "Mismatch in sorted names");
+	}
+
+	@Test
+	public void testUserCheckoutJourney_CannotCheckoutWithoutName_Fail() {
+		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
+
+		productsPage.addToCart("Test.allTheThings() T-Shirt (Red)", "$15.99");
+		initateCheckout("", "User", "TU1 1TU");
+		yourInfoPage.continueCheckout();
+
+		assertTrue(yourInfoPage.isValidationErrorPresent(), "Expected validation error due to empty firstname");
+	}
+
+	@Test
 	public void testUserCheckoutJourney_CustomItemAddition_Success() {
 		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
 
 		LOGGER.info("Add items to cart.");
 		productsPage.addToCart("Test.allTheThings() T-Shirt (Red)", "$15.99");
-		assertEquals(productsPage.getNumOfItemsOnCart(), 1, "Mismatch in cart item count");
+		productsPage.addToCart("Sauce Labs Fleece Jacket", "$49.99");
+		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
 
 		initateCheckout("Test", "User", "TU1 1TU");
 
