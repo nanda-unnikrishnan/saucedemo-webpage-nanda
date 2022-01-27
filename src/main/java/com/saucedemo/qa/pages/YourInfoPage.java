@@ -24,10 +24,10 @@ public class YourInfoPage extends PageBase {
 	@FindBy(id = "continue")
 	WebElement continueButton;
 
-	public void enterYourInfo() {
-		firstName.sendKeys("Test");
-		lastName.sendKeys("User");
-		postalCode.sendKeys("TU1 1TU");
+	public void enterYourInfo(String firstNameValue, String lastNameValue, String postalCodeValue) {
+		firstName.sendKeys(firstNameValue);
+		lastName.sendKeys(lastNameValue);
+		postalCode.sendKeys(postalCodeValue);
 	}
 
 	public CheckoutOverviewPage continueCheckout() {
@@ -37,16 +37,16 @@ public class YourInfoPage extends PageBase {
 
 	// Getter methods
 
-	public WebElement getFirstName() {
-		return firstName;
+	public String getFirstNameValue() {
+		return firstName.getAttribute("value");
 	}
 
-	public WebElement getLastName() {
-		return lastName;
+	public String getLastNameValue() {
+		return lastName.getAttribute("value");
 	}
 
-	public WebElement getPostalCode() {
-		return postalCode;
+	public String getPostalCodeValue() {
+		return postalCode.getAttribute("value");
 	}
 
 }

@@ -29,12 +29,12 @@ public class ProductsPageTest extends TestBase {
 	public void testSortOrderChange() {
 
 		System.out.println("\nInventory List with default sort\n");
-		productsPage.displayInventory();
+		productsPage.printInventoryPrices();
 
-		productsPage.sortBy("Price (high to low)");
+		productsPage.sortItems("Price (high to low)");
 
 		System.out.println("\nInventory List After Sorting\n");
-		productsPage.displayInventory();
+		productsPage.printInventoryPrices();
 
 		// Placeholder for validations on whether items are sorted correctly.
 
@@ -43,7 +43,10 @@ public class ProductsPageTest extends TestBase {
 	@Test(priority = 2)
 	public void testAddItems() {
 
-		productsPage.addToCart();
+		// Add second costliest item
+		productsPage.addToCart(1);
+		// Add cheapest item
+		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 		int itemsAdded = productsPage.getNumOfItemsOnCart();
 		assertEquals(itemsAdded, 2);
 	}
