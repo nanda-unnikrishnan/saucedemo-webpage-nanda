@@ -22,4 +22,15 @@
 ```
 mvn clean test
 ```
+Or to override driver location to custom location and change browser to firefox/chrome,
+For Firefox:
+```
+mvn clean test -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
+```
+
+For Chrome:
+```
+mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
+```
+
 4. Verify test outputs in test-output folder
