@@ -1,6 +1,6 @@
 package com.saucedemo.qa.integration;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,9 +38,8 @@ public class UserCheckoutJourneyTest extends TestBase {
 
 	@Test
 	public void testUserCheckoutJourney_SecondCostliestAndCheapestItem_Success() {
-		verifyLoginComplete();
+		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
 
-		LOGGER.info("Logged in, proceeding to sort now");
 		// Retrieve prices before sorting
 		List<Double> pricesBeforeSorting = productsPage.getInventoryPrices();
 		Collections.sort(pricesBeforeSorting, Collections.reverseOrder());
@@ -57,20 +56,19 @@ public class UserCheckoutJourneyTest extends TestBase {
 		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
 
-		LOGGER.info("Proceeding to checkout");
 		initateCheckout();
-
 		verifyCheckoutComplete();
 	}
 
 	@Test
 	public void testUserCheckoutJourney_ThirdCostliestAndCheapestItem_Success() {
-		verifyLoginComplete();
+		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
 
 		// Retrieve prices before sorting
 		List<Double> pricesBeforeSorting = productsPage.getInventoryPrices();
 		Collections.sort(pricesBeforeSorting, Collections.reverseOrder());
 
+		LOGGER.info("Sorted items, add items to cart");
 		// Sort items on the page
 		productsPage.sortItems(InventorySortOrder.BY_PRICE_HIGH_TO_LOW.getDescription());
 		List<Double> pricesAfterSorting = productsPage.getInventoryPrices();
@@ -87,7 +85,14 @@ public class UserCheckoutJourneyTest extends TestBase {
 		verifyCheckoutComplete();
 	}
 
+	@Test
+	public void testUserCheckoutJourney_LoginFail_ThenSuccess() {
+		verifyLoginFailure("test", "test");
+		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
+	}
+
 	private void initateCheckout() {
+		LOGGER.info("Proceeding to checkout");
 		yourCartPage = productsPage.goToCart();
 		assertEquals(yourCartPage.getTitle(), "YOUR CART", "Unable to reach 'Cart' page");
 
@@ -107,12 +112,20 @@ public class UserCheckoutJourneyTest extends TestBase {
 
 		checkoutCompletePage = checkoutOverviewPage.clickOnFinish();
 		assertEquals(checkoutCompletePage.getTitle(), "CHECKOUT: COMPLETE!");
+		LOGGER.info("Checkout complete");
 	}
 
-	private void verifyLoginComplete() {
+	private void verifyLoginSuccess(String username, String password) {
 		loginPage = new LoginPage(getDriver());
-		productsPage = loginPage.login(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
+		productsPage = loginPage.login(username, password);
 		assertEquals(productsPage.getTitle(), "PRODUCTS", "Unable to reach 'Products' page");
+		LOGGER.info("Logged in user. Now in Products page");
+	}
+
+	private void verifyLoginFailure(String username, String password) {
+		loginPage = new LoginPage(getDriver());
+		assertNull(loginPage.login(username, password));
+		LOGGER.info("Login failure");
 	}
 
 	@Override
