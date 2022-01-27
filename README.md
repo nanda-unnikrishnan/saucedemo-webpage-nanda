@@ -20,19 +20,19 @@
 2. Go to directory global-qa-interview-nanda
 3. Execute below command which uses maven (needs to be installed prior)
 ```
-mvn clean test
+mvn clean test -Dtest=UserCheckoutJourneyTest
 ```
 
 Or override driver location to custom location and change browser to firefox/chrome by passing -D arguments.
 
 For Firefox:
 ```
-mvn clean test -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
+mvn clean test  -Dtest=UserCheckoutJourneyTest -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
 ```
 
 For Chrome:
 ```
-mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
+mvn clean test  -Dtest=UserCheckoutJourneyTest -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
 ```
 
 4. Verify test outputs in test-output folder
