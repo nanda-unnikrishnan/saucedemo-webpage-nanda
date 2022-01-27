@@ -22,7 +22,7 @@ public class ProductsPage extends PageBase {
 
 	// Object repository for Products page
 	@FindBy(className = "inventory_item_name")
-	private List<WebElement> inventoryList;
+	private List<WebElement> inventoryNames;
 
 	@FindBy(xpath = "//div[@class='inventory_item_price']")
 	List<WebElement> inventoryPrices;
@@ -61,6 +61,16 @@ public class ProductsPage extends PageBase {
 			LOGGER.info("Item at index [{}] added to cart", itemIndex);
 		} else {
 			LOGGER.info("Item at index [{}] is already added to cart", itemIndex);
+		}
+	}
+
+	public void addToCart(String title, String price) {
+		for (int i = 0; i < inventoryNames.size(); i++) {
+			if (inventoryNames.get(i).getText().equals(title) && inventoryPrices.get(i).getText().equals(price)) {
+				addRemoveButtons.get(i).click();
+				LOGGER.info("Item with title:[{}] and price:[{}] added to cart", title, price);
+				break;
+			}
 		}
 	}
 

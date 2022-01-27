@@ -16,6 +16,9 @@ public class CheckoutOverviewPage extends PageBase {
 		super(driver);
 	}
 
+	@FindBy(className = "inventory_item_name")
+	private List<WebElement> inventoryNames;
+
 	@FindBy(xpath = "//div[@class='inventory_item_price']")
 	List<WebElement> inventoryPrices;
 
@@ -29,10 +32,20 @@ public class CheckoutOverviewPage extends PageBase {
 
 		double calculatedPrice = 0.0;
 		for (int i = 0; i < inventoryPrices.size(); i++) {
-			calculatedPrice = calculatedPrice + (Double.parseDouble(inventoryPrices.get(i).getText().substring(DOLLAR_SIGN_INDEX)));
+			calculatedPrice = calculatedPrice
+					+ (Double.parseDouble(inventoryPrices.get(i).getText().substring(DOLLAR_SIGN_INDEX)));
 		}
 
 		return calculatedPrice;
+	}
+
+	public boolean doesItemExistInCheckout(String title, String price) {
+		for (int i = 0; i < inventoryNames.size(); i++) {
+			if (inventoryNames.get(i).getText().equals(title) && inventoryPrices.get(i).getText().equals(price)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public double getItemTotal() {
@@ -43,4 +56,5 @@ public class CheckoutOverviewPage extends PageBase {
 		finishButton.click();
 		return new CheckoutCompletePage(getDriver());
 	}
+
 }

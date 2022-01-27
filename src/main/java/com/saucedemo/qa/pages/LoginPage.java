@@ -38,22 +38,29 @@ public class LoginPage extends PageBase {
 
 		loginButton.click();
 
+		if (!isLoginSuccessful()) {
+			return null;
+		}
+
+		LOGGER.error("Login successfull.");
+		return new ProductsPage(getDriver());
+	}
+
+	private boolean isLoginSuccessful() {
 		// Reduce timeout so as to fail fast when element is not found
 		getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
 		try {
 			if (errorButton.isDisplayed()) {
-				LOGGER.error("Unable to login");
-				return null;
+				LOGGER.error("Unable to login with error displayed.");
+				return false;
 			}
 		} catch (NoSuchElementException e) {
 			// Ignore this error as the error button is not seen on successfull login
 		}
-
-		LOGGER.error("Login successfull");
 		// Reset timeout
 		getDriver().manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+		return true;
 
-		return new ProductsPage(getDriver());
 	}
 
 }

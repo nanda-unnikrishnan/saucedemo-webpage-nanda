@@ -49,40 +49,35 @@ public class UserCheckoutJourneyTest extends TestBase {
 		List<Double> pricesAfterSorting = productsPage.getInventoryPrices();
 		assertEquals(pricesAfterSorting, pricesBeforeSorting, "Mismatch in sorted prices");
 
-		LOGGER.info("Sorted items, add items to cart");
+		LOGGER.info("Sorted items, add items to cart.");
 		// Add second costliest item
 		productsPage.addToCart(1);
 		// Add cheapest item
 		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
 
-		initateCheckout();
-		verifyCheckoutComplete();
+		initateCheckout("Test", "User", "TU1 1TU");
+		proceedToCheckoutOverviewPage();
+		proceedToCheckoutCompletePage();
 	}
 
 	@Test
-	public void testUserCheckoutJourney_ThirdCostliestAndCheapestItem_Success() {
+	public void testUserCheckoutJourney_CustomItemAddition_Success() {
 		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
 
-		// Retrieve prices before sorting
-		List<Double> pricesBeforeSorting = productsPage.getInventoryPrices();
-		Collections.sort(pricesBeforeSorting, Collections.reverseOrder());
+		LOGGER.info("Add items to cart.");
+		productsPage.addToCart("Test.allTheThings() T-Shirt (Red)", "$15.99");
+		assertEquals(productsPage.getNumOfItemsOnCart(), 1, "Mismatch in cart item count");
 
-		LOGGER.info("Sorted items, add items to cart");
-		// Sort items on the page
-		productsPage.sortItems(InventorySortOrder.BY_PRICE_HIGH_TO_LOW.getDescription());
-		List<Double> pricesAfterSorting = productsPage.getInventoryPrices();
-		assertEquals(pricesAfterSorting, pricesBeforeSorting, "Mismatch in sorted prices");
+		initateCheckout("Test", "User", "TU1 1TU");
 
-		// Add third costliest item
-		productsPage.addToCart(2);
-		// Add cheapest item
-		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
-		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
+		proceedToCheckoutOverviewPage();
+		assertTrue(checkoutOverviewPage.doesItemExistInCheckout("Test.allTheThings() T-Shirt (Red)", "$15.99"),
+				"Selected item not included in checkout");
+		assertFalse(checkoutOverviewPage.doesItemExistInCheckout("Sauce Labs Bike Light", "$9.99"),
+				"Unselected item included in checkout");
 
-		initateCheckout();
-
-		verifyCheckoutComplete();
+		proceedToCheckoutCompletePage();
 	}
 
 	@Test
@@ -91,41 +86,44 @@ public class UserCheckoutJourneyTest extends TestBase {
 		verifyLoginSuccess(AppConfig.getConfigValue("username"), AppConfig.getConfigValue("password"));
 	}
 
-	private void initateCheckout() {
-		LOGGER.info("Proceeding to checkout");
+	private void initateCheckout(String firstname, String lastname, String postCode) {
+		LOGGER.info("Proceeding to checkout.");
 		yourCartPage = productsPage.goToCart();
 		assertEquals(yourCartPage.getTitle(), "YOUR CART", "Unable to reach 'Cart' page");
 
 		yourInfoPage = yourCartPage.checkout();
 		assertEquals(yourInfoPage.getTitle(), "CHECKOUT: YOUR INFORMATION", "Unable to reach 'Your Info' page");
 
-		yourInfoPage.enterYourInfo("Test", "User", "TU1 1TU");
-		assertEquals(yourInfoPage.getFirstNameValue(), "Test");
-		assertEquals(yourInfoPage.getLastNameValue(), "User");
-		assertEquals(yourInfoPage.getPostalCodeValue(), "TU1 1TU");
+		yourInfoPage.enterYourInfo(firstname, lastname, postCode);
+		assertEquals(yourInfoPage.getFirstNameValue(), firstname);
+		assertEquals(yourInfoPage.getLastNameValue(), lastname);
+		assertEquals(yourInfoPage.getPostalCodeValue(), postCode);
 	}
 
-	private void verifyCheckoutComplete() {
+	private void proceedToCheckoutCompletePage() {
+		checkoutCompletePage = checkoutOverviewPage.clickOnFinish();
+		assertEquals(checkoutCompletePage.getTitle(), "CHECKOUT: COMPLETE!");
+		LOGGER.info("Checkout complete");
+	}
+
+	private void proceedToCheckoutOverviewPage() {
 		checkoutOverviewPage = yourInfoPage.continueCheckout();
 		assertEquals(checkoutOverviewPage.getTitle(), "CHECKOUT: OVERVIEW");
 		assertEquals(checkoutOverviewPage.calculateTotalPrice(), checkoutOverviewPage.getItemTotal());
 
-		checkoutCompletePage = checkoutOverviewPage.clickOnFinish();
-		assertEquals(checkoutCompletePage.getTitle(), "CHECKOUT: COMPLETE!");
-		LOGGER.info("Checkout complete");
 	}
 
 	private void verifyLoginSuccess(String username, String password) {
 		loginPage = new LoginPage(getDriver());
 		productsPage = loginPage.login(username, password);
 		assertEquals(productsPage.getTitle(), "PRODUCTS", "Unable to reach 'Products' page");
-		LOGGER.info("Logged in user. Now in Products page");
+		LOGGER.info("Logged in user. Now in Products page.");
 	}
 
 	private void verifyLoginFailure(String username, String password) {
 		loginPage = new LoginPage(getDriver());
 		assertNull(loginPage.login(username, password));
-		LOGGER.info("Login failure");
+		LOGGER.info("Login failure.");
 	}
 
 	@Override
