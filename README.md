@@ -22,7 +22,9 @@
 ```
 mvn clean test
 ```
-Or to override driver location to custom location and change browser to firefox/chrome,
+
+Or override driver location to custom location and change browser to firefox/chrome by passing -D arguments.
+
 For Firefox:
 ```
 mvn clean test -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
