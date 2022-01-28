@@ -44,12 +44,13 @@ mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriv
 
 4. Verify test outputs in output folder to view html reports
 
-#Q: API Automation 
-##Summary
+# Q: API Automation 
+
+## Summary
 - Collection created in Postman
 - Queries are added as separate within the collection taking variables from collection where required
 
-##Test Execution
+## Test Execution
 1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
 2. Go to directory global-qa-interview-nanda/postman
 3. Import json file `Spacex.postman_collection.json` into your postman instance
