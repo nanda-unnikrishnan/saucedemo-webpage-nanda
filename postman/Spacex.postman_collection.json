@@ -1,0 +1,205 @@
+{
+	"info": {
+		"_postman_id": "12aabba9-9fd4-4fe7-a830-8462e747c94f",
+		"name": "Spacex",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LaunchesQuery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "{\r\n  launches {\r\n    id\r\n    mission_name\r\n    ships {\r\n      id\r\n    }\r\n    rocket {\r\n      first_stage {\r\n        cores {\r\n          block\r\n        }\r\n      }\r\n      second_stage {\r\n        block\r\n      }\r\n    }\r\n  }\r\n}\r\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "{{spacexApiUrl}}",
+					"host": [
+						"{{spacexApiUrl}}"
+					]
+				},
+				"description": "This collection contains the tests on Spacex API for Global QA Test - API exercise"
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateLimit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var launchCount = pm.collectionVariables.get(\"launchCount\");\r",
+							"\r",
+							"pm.test(\"Validate the set limit\", function () {\r",
+							"    pm.expect(launchCount == pm.collectionVariables.get(\"limit\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query($limit: Int!){\r\n  launches(limit: $limit) {\r\n    mission_name\r\n    launch_date_local\r\n    rocket {\r\n      rocket_name\r\n      first_stage {\r\n        cores {\r\n          block\r\n        }\r\n      }\r\n      second_stage {\r\n        block\r\n      }\r\n    }\r\n    ships {\r\n      name\r\n      home_port\r\n      image\r\n    }\r\n  }\r\n}\r\n",
+						"variables": " {\r\n     \"limit\": {{limit}}\r\n }"
+					}
+				},
+				"url": {
+					"raw": "{{spacexApiUrl}}",
+					"host": [
+						"{{spacexApiUrl}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateOffset",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query($offset: Int!){\r\n  launches(offset: $offset) {\r\n    mission_name\r\n    launch_date_local\r\n    rocket {\r\n      rocket_name\r\n      first_stage {\r\n        cores {\r\n          block\r\n        }\r\n      }\r\n      second_stage {\r\n        block\r\n      }\r\n    }\r\n    ships {\r\n      name\r\n      home_port\r\n      image\r\n    }\r\n  }\r\n}\r\n",
+						"variables": "{\r\n    \"offset\" : {{offset}}\r\n}"
+					}
+				},
+				"url": {
+					"raw": "{{spacexApiUrl}}",
+					"host": [
+						"{{spacexApiUrl}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"1. Status code is 200\", function () {",
+					"    pm.response.to.have.status(200);",
+					"});",
+					"",
+					"",
+					"var launchCount = pm.response.json().data.launches.length;",
+					"pm.collectionVariables.set(\"launchCount\", launchCount);",
+					"",
+					"pm.test(\"Print number of launches to console\", function () {",
+					"    console.log(\"Number of launches : \" + launchCount);",
+					"});",
+					"",
+					"pm.test(\"2. Mission name object is not empty\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    for(var launchIndex in jsonData.data.launches){",
+					"        var launch = jsonData.data.launches[launchIndex];",
+					"        pm.expect(launch.mission_name).to.not.be.empty;",
+					"    }",
+					"});",
+					"",
+					"pm.test(\"3. Number of launches is greater than 0\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    pm.expect(launchCount>0);",
+					"});",
+					"",
+					"pm.test(\"4. Number of ships is greater than 0\", function () {",
+					"    var jsonData = pm.response.json();",
+					"    var ships = 0;",
+					"    for(let i=0; i<launchCount; i++){",
+					"        if(jsonData.data.launches[i].ships.length != 0){",
+					"            ships++;",
+					"        }",
+					"    }",
+					"    console.log(\"Number of ships : \" + ships);",
+					"    pm.expect(ships>0);",
+					"});",
+					"",
+					"",
+					"pm.test(\"5. first stage & second stage are not null\", function () {",
+					"    var jsonData = pm.response.json();",
+					"",
+					"    for(let i=0; i<launchCount; i++){",
+					"        first_stage = jsonData.data.launches[i].rocket.first_stage;",
+					"        second_stage = jsonData.data.launches[i].rocket.second_stage;",
+					"        pm.expect(first_stage !== null) && pm.expect(second_stage !== null);",
+					"    }    ",
+					"});",
+					"",
+					"return launchCount;"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "launchCount",
+			"value": ""
+		},
+		{
+			"key": "limit",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "offset",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "spacexApiUrl",
+			"value": "https://api.spacex.land/graphql/",
+			"type": "string"
+		}
+	]
+}
