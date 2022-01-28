@@ -1,4 +1,6 @@
-# Q: Implement a test to verify the following user journey
+# UI Automation
+
+## Q: Implement a test to verify the following user journey
 
  1. Login to https://www.saucedemo.com/ using the "standard_user" account
  2. Sort the products by Price (high to low)
@@ -7,7 +9,7 @@
  5. Checkout
  6. Enter details and Finish the purchase
 
-## Solution
+### Solution
 - This solution is built based on PageObjectModel design pattern with a data driven Framework.
 - Implementation is using Selenium WebDriver(with Java) for scripting, Maven for build and TestNG for execution.
 - Separate page level tests are written independent of each other.
@@ -30,8 +32,7 @@
   `eg. -Dtestdata.filename=<New file name>`
 
 
-
-## Test execution
+### Test execution
 
 1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
 2. Go to directory *global-qa-interview-nanda*
@@ -40,7 +41,8 @@
 mvn clean test -Dchrome.driver.location=<location_of_chromedriver>
 ```
 
-You could override browsers to firefox/chrome by passing arguments for browser and driver location.
+You could override browsers to firefox/chrome by passing arguments for browser and the corresponding WebDriver location.
+
 For Chrome:
 ```
 mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
@@ -56,13 +58,31 @@ Run a specific test case:
 mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver> -Dtest=CheckoutOverviewTest#testCheckoutOverview_ItemsAddedArePresentInCheckout_Multiple
 ```
 
-4. Verify test outputs in output folder to view html reports
+4. Test outputs
+   - TestNG's html report will be present in the test-output folder.
+   - Screenshots(if any) will be present in the screenshots folder.
 
-# Q: API Automation 
 
-## Summary
-- Collection created in Postman
-- Queries are added as separate within the collection taking variables from collection where required
+
+# API Automation 
+
+# Q : Using https://api.spacex.land/graphql/
+
+- Write a test that queries the API for all launches and returns the number of launches
+- Write a test to update the limit parameter and returns the number of launches Ex: limit=2
+- Write a test to update the offset parameter and returns the number of launches Ex: offset=2
+
+Assertions
+* Assert status code is 200
+* Assert mission name object is not empty
+* Assert that the number of launches is greater than 0
+* Assert that that the number of ships is greater than 0
+* Assert the first stage & second stage are not null
+
+## Solution
+- The API requests pertaining to the 3 tests are created as a collection in Postman
+- The url, `limit` and `offset` are passed to the queries as collection variables.
+- Tests are written at the collection level as the assertions performed on the responses were common.
 
 ## Test Execution
 1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
