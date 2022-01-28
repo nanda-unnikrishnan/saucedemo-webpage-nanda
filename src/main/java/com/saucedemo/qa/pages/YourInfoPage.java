@@ -34,7 +34,7 @@ public class YourInfoPage extends PageBase {
 		return this;
 	}
 
-	public CheckoutOverviewPage continueCheckout() {
+	public CheckoutOverviewPage proceedToCheckoutOverviewPage() {
 		continueButton.click();
 		return new CheckoutOverviewPage(getDriver());
 	}

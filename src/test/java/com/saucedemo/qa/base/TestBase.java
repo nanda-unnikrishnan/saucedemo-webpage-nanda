@@ -1,21 +1,22 @@
-package com.saucedemo.qa.utils;
+package com.saucedemo.qa.base;
 
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.AfterMethod;
 
-import com.saucedemo.qa.base.AppConfig;
-
-public class TestBase {
+public abstract class TestBase {
 
 	protected static final String STANDARD_USERNAME_CONFIG_NAME = "standard.username";
 	protected static final String STANDARD_PASSWORD_CONFIG_NAME = "standard.password";
+	private static final String SCREENSHOT_IMAGE_EXTENSION = ".png";
 
 	private WebDriver driver;
 
-	protected void setUp() {
+	public void setUp() {
 		initializeDriver();
 	}
 
@@ -49,7 +50,13 @@ public class TestBase {
 		return driver;
 	}
 
-	public void tearDown() {
+	@AfterMethod
+	public void tearDown(ITestResult result) {
 		driver.quit();
+	}
+
+	protected String getScreenshotName(ITestResult result) {
+		return result.getMethod()
+				.getQualifiedName() + SCREENSHOT_IMAGE_EXTENSION;
 	}
 }

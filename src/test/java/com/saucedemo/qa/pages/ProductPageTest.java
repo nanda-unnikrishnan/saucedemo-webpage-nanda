@@ -5,13 +5,13 @@ import static org.testng.Assert.assertEquals;
 import java.util.Collections;
 import java.util.List;
 
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.saucedemo.qa.base.AppConfig;
 import com.saucedemo.qa.base.InventorySortOrder;
-import com.saucedemo.qa.utils.TestBase;
+import com.saucedemo.qa.base.PageTitle;
+import com.saucedemo.qa.base.TestBase;
 
 public class ProductPageTest extends TestBase {
 
@@ -25,6 +25,11 @@ public class ProductPageTest extends TestBase {
 				AppConfig.getConfigValue(STANDARD_PASSWORD_CONFIG_NAME));
 	}
 
+	@Test(priority = 1)
+	public void testPageTitle() {
+		assertEquals(productsPage.getTitle(), PageTitle.PRODUCTS_PAGE_TITLE.getTitleText());
+	}
+
 	@Test
 	public void testSortOrder_PriceHighToLow() {
 		// Retrieve prices before changing the default sort on the page
@@ -35,7 +40,7 @@ public class ProductPageTest extends TestBase {
 		// Sort items on the page
 		productsPage.sortItems(InventorySortOrder.BY_PRICE_HIGH_TO_LOW.getDescription());
 		List<Double> actualPricesAfterSorting = productsPage.getInventoryPrices();
-		assertEquals(actualPricesAfterSorting, sortedPrices, "Mismatch in sorted prices");
+		assertEquals(actualPricesAfterSorting, sortedPrices, "Prices not sorted from high to low.");
 	}
 
 	@Test
@@ -47,7 +52,7 @@ public class ProductPageTest extends TestBase {
 		// Sort items on the page
 		productsPage.sortItems(InventorySortOrder.BY_NAME_A_TO_Z.getDescription());
 		List<String> actualNamesAfterSorting = productsPage.getInventoryNames();
-		assertEquals(actualNamesAfterSorting, namesFromPage, "Mismatch in sorted names");
+		assertEquals(actualNamesAfterSorting, namesFromPage, "Products not sorted by name(A to Z).");
 	}
 
 	@Test
@@ -60,12 +65,6 @@ public class ProductPageTest extends TestBase {
 		productsPage.addToCart(productsPage.getTotalItemCount() - 1);
 
 		assertEquals(productsPage.getNumOfItemsOnCart(), 2, "Mismatch in cart item count");
-	}
-
-	@Override
-	@AfterMethod
-	public void tearDown() {
-		super.tearDown();
 	}
 
 }

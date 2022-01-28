@@ -8,15 +8,18 @@ import com.saucedemo.qa.base.PageBase;
 
 public class YourCartPage extends PageBase {
 
-	public YourCartPage(WebDriver driver) {
-		super(driver);
-	}
+	// Object repository for Products page
 
 	@FindBy(id = "checkout")
 	private WebElement checkoutButton;
 
-	public YourInfoPage checkout() {
+	public YourCartPage(WebDriver driver) {
+		super(driver);
+	}
+
+	public YourInfoPage proceedToYourInfoPage() {
 		checkoutButton.click();
 		return new YourInfoPage(getDriver());
 	}
+
 }

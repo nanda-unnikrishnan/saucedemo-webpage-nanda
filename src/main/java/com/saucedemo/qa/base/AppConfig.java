@@ -5,19 +5,20 @@ import java.util.Properties;
 
 public class AppConfig {
 
-	private static Properties props;
+	private static final Properties PROPERTIES;
 
 	static {
 		try {
-			props = new Properties();
-			props.load(AppConfig.class.getClassLoader().getResourceAsStream("config.properties"));
-			props.putAll(System.getProperties());
+			PROPERTIES = new Properties();
+			PROPERTIES.load(AppConfig.class.getClassLoader()
+					.getResourceAsStream("config.properties"));
+			PROPERTIES.putAll(System.getProperties());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	public static String getConfigValue(String configName) {
-		return props.getProperty(configName);
+		return PROPERTIES.getProperty(configName);
 	}
 }
