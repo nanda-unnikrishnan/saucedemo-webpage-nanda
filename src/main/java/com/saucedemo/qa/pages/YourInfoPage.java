@@ -13,24 +13,25 @@ public class YourInfoPage extends PageBase {
 	}
 
 	@FindBy(id = "first-name")
-	WebElement firstName;
+	private WebElement firstName;
 
 	@FindBy(id = "last-name")
-	WebElement lastName;
+	private WebElement lastName;
 
 	@FindBy(id = "postal-code")
-	WebElement postalCode;
+	private WebElement postalCode;
 
 	@FindBy(id = "continue")
-	WebElement continueButton;
+	private WebElement continueButton;
 
 	@FindBy(xpath = "//h3//button[@class='error-button']")
-	WebElement errorButton;
+	private WebElement errorButton;
 
-	public void enterYourInfo(String firstNameValue, String lastNameValue, String postalCodeValue) {
+	public YourInfoPage enterYourInfo(String firstNameValue, String lastNameValue, String postalCodeValue) {
 		firstName.sendKeys(firstNameValue);
 		lastName.sendKeys(lastNameValue);
 		postalCode.sendKeys(postalCodeValue);
+		return this;
 	}
 
 	public CheckoutOverviewPage continueCheckout() {

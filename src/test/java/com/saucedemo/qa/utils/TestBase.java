@@ -10,6 +10,9 @@ import com.saucedemo.qa.base.AppConfig;
 
 public class TestBase {
 
+	protected static final String STANDARD_USERNAME_CONFIG_NAME = "standard.username";
+	protected static final String STANDARD_PASSWORD_CONFIG_NAME = "standard.password";
+
 	private WebDriver driver;
 
 	protected void setUp() {
@@ -27,10 +30,17 @@ public class TestBase {
 			driver = new FirefoxDriver();
 		}
 
-		driver.manage().window().maximize();
-		driver.manage().deleteAllCookies();
-		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage()
+				.window()
+				.maximize();
+		driver.manage()
+				.deleteAllCookies();
+		driver.manage()
+				.timeouts()
+				.pageLoadTimeout(30, TimeUnit.SECONDS);
+		driver.manage()
+				.timeouts()
+				.implicitlyWait(30, TimeUnit.SECONDS);
 
 		driver.get(AppConfig.getConfigValue("url"));
 	}

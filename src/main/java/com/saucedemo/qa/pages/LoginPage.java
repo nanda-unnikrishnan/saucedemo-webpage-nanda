@@ -1,8 +1,7 @@
 package com.saucedemo.qa.pages;
 
-import java.util.concurrent.TimeUnit;
-
-import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +14,13 @@ public class LoginPage extends PageBase {
 
 	// Object repository for the page
 	@FindBy(id = "user-name")
-	WebElement username;
+	private WebElement username;
 
 	@FindBy(id = "password")
-	WebElement password;
+	private WebElement password;
 
 	@FindBy(id = "login-button")
-	WebElement loginButton;
-
-	@FindBy(xpath = "//h3//button[@class='error-button']")
-	WebElement errorButton;
+	private WebElement loginButton;
 
 	public LoginPage(WebDriver driver) {
 		super(driver);
@@ -38,29 +34,13 @@ public class LoginPage extends PageBase {
 
 		loginButton.click();
 
-		if (!isLoginSuccessful()) {
+		if (isErrorMessagePresent()) {
+			LOGGER.warn("Login unsuccessful");
 			return null;
 		}
 
-		LOGGER.error("Login successfull.");
+		LOGGER.info("Login button clicked.");
 		return new ProductsPage(getDriver());
-	}
-
-	private boolean isLoginSuccessful() {
-		// Reduce timeout so as to fail fast when element is not found
-		getDriver().manage().timeouts().implicitlyWait(10, TimeUnit.MILLISECONDS);
-		try {
-			if (errorButton.isDisplayed()) {
-				LOGGER.error("Unable to login with error displayed.");
-				return false;
-			}
-		} catch (NoSuchElementException e) {
-			// Ignore this error as the error button is not seen on successfull login
-		}
-		// Reset timeout
-		getDriver().manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-		return true;
-
 	}
 
 }

@@ -1,7 +1,9 @@
 package com.saucedemo.qa.pages;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -39,8 +41,11 @@ public class ProductsPage extends PageBase {
 	@FindBy(xpath = "//span[@class='shopping_cart_badge']")
 	private WebElement itemsOnCart;
 
+	private final Map<String, String> mapOfCartItemsToPrice;
+
 	public ProductsPage(WebDriver driver) {
 		super(driver);
+		mapOfCartItemsToPrice = new HashMap<>();
 	}
 
 	public void printInventoryPrices() {
@@ -50,34 +55,55 @@ public class ProductsPage extends PageBase {
 		LOGGER.debug("Complete");
 	}
 
-	public void sortItems(String sortOption) {
+	public ProductsPage sortItems(String sortOption) {
 		Select select = new Select(sortDropDown);
 		select.selectByVisibleText(sortOption);
+		return this;
 	}
 
-	public void addToCart(int itemIndex) {
-		if (addRemoveButtons.get(itemIndex).getText().equals(ADD_TO_CART_BUTTON_LABEL)) {
-			addRemoveButtons.get(itemIndex).click();
+	public ProductsPage addToCart(int itemIndex) {
+		if (addRemoveButtons.get(itemIndex)
+				.getText()
+				.equals(ADD_TO_CART_BUTTON_LABEL)) {
+			addRemoveButtons.get(itemIndex)
+					.click();
+			mapOfCartItemsToPrice.put(inventoryNames.get(itemIndex)
+					.getText(),
+					inventoryPrices.get(itemIndex)
+							.getText());
 			LOGGER.info("Item at index [{}] added to cart", itemIndex);
 		} else {
 			LOGGER.info("Item at index [{}] is already added to cart", itemIndex);
 		}
+		return this;
 	}
 
-	public void addToCart(String title, String price) {
-		for (int i = 0; i < inventoryNames.size(); i++) {
-			if (inventoryNames.get(i).getText().equals(title) && inventoryPrices.get(i).getText().equals(price)) {
-				addRemoveButtons.get(i).click();
+	public ProductsPage addToCart(String title, String price) {
+		for (int index = 0; index < inventoryNames.size(); index++) {
+			if (inventoryNames.get(index)
+					.getText()
+					.equals(title)
+					&& inventoryPrices.get(index)
+							.getText()
+							.equals(price)) {
+				addRemoveButtons.get(index)
+						.click();
+				mapOfCartItemsToPrice.put(inventoryNames.get(index)
+						.getText(),
+						inventoryPrices.get(index)
+								.getText());
 				LOGGER.info("Item with title:[{}] and price:[{}] added to cart", title, price);
 				break;
 			}
 		}
+		return this;
 	}
 
 	public List<Double> getInventoryPrices() {
 		List<Double> priceValues = new ArrayList<>();
 		for (WebElement inventoryPrice : inventoryPrices) {
-			priceValues.add(Double.valueOf(inventoryPrice.getText().substring(DOLLAR_SIGN_INDEX)));
+			priceValues.add(Double.valueOf(inventoryPrice.getText()
+					.substring(DOLLAR_SIGN_INDEX)));
 		}
 		return priceValues;
 	}
@@ -96,6 +122,10 @@ public class ProductsPage extends PageBase {
 
 	public int getNumOfItemsOnCart() {
 		return Integer.parseInt(itemsOnCart.getText());
+	}
+
+	public Map<String, String> getMapOfCartItemsToPrice() {
+		return mapOfCartItemsToPrice;
 	}
 
 	public YourCartPage goToCart() {

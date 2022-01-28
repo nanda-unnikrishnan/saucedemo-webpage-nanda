@@ -1,6 +1,8 @@
 package com.saucedemo.qa.pages;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,24 +34,17 @@ public class CheckoutOverviewPage extends PageBase {
 
 		double calculatedPrice = 0.0;
 		for (int i = 0; i < inventoryPrices.size(); i++) {
-			calculatedPrice = calculatedPrice
-					+ (Double.parseDouble(inventoryPrices.get(i).getText().substring(DOLLAR_SIGN_INDEX)));
+			calculatedPrice = calculatedPrice + (Double.parseDouble(inventoryPrices.get(i)
+					.getText()
+					.substring(DOLLAR_SIGN_INDEX)));
 		}
 
 		return calculatedPrice;
 	}
 
-	public boolean doesItemExistInCheckout(String title, String price) {
-		for (int i = 0; i < inventoryNames.size(); i++) {
-			if (inventoryNames.get(i).getText().equals(title) && inventoryPrices.get(i).getText().equals(price)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public double getItemTotal() {
-		return Double.parseDouble(itemTotal.getText().substring("Item total: $".length()));
+		return Double.parseDouble(itemTotal.getText()
+				.substring("Item total: $".length()));
 	}
 
 	public CheckoutCompletePage clickOnFinish() {
@@ -57,4 +52,14 @@ public class CheckoutOverviewPage extends PageBase {
 		return new CheckoutCompletePage(getDriver());
 	}
 
+	public Map<String, String> getItemNamesToPricesMap() {
+		Map<String, String> itemNamesToPricesMap = new HashMap<>();
+		for (int index = 0; index < inventoryNames.size(); index++) {
+			itemNamesToPricesMap.put(inventoryNames.get(index)
+					.getText(),
+					inventoryPrices.get(index)
+							.getText());
+		}
+		return itemNamesToPricesMap;
+	}
 }

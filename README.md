@@ -8,31 +8,38 @@
  6. Enter details and Finish the purchase
 
 # Summary of solution
-- Solution written using Selenium, TestNG and Java.
-- PageObjectModel used to model various website pages
-- Checkout scenarios tested in UserCheckoutJourneyTest
-- Configurations (browser and webdriver to use, default username, password etc) provided in config.properties file, or overriden as -D property in CLI
+- Solution written using Selenium WebDriver with Java and executed using TestNG.
+- PageObjectModel pattern used to create page classes
 
+- Configurations (browser and webdriver to use, default username, password etc) are provided in config.properties file which can be overriden as a property from command line as well (using -DpropertyName=propertyValue syntax)
+
+- A data file contains various sample data for Login page as well as User info page. This is tested in `LoginFunctionalityTest` and `YourInfoPageTest`. This data file location can also be overriden as a property from command line.
+
+- Exact scenario from question is tested under `CheckoutOverviewTest#testCheckoutOverview_ItemsAddedArePresentInCheckout_Multiple`
 
 # Test execution
 
 1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
 2. Go to directory global-qa-interview-nanda
-3. Execute below command which uses maven (needs to be installed prior)
+3. Execute below command which uses maven (needs to be installed prior) after updating chrome driver location
 ```
-mvn clean test -Dtest=UserCheckoutJourneyTest
+mvn clean test -Dchrome.driver.location=<location_of_chromedriver>
 ```
 
-Or override driver location to custom location and change browser to firefox/chrome by passing -D arguments.
+You could override browsers to firefox/chrome by passing arguments for browser and driver location.
+For Chrome:
+```
+mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
+```
 
 For Firefox:
 ```
-mvn clean test  -Dtest=UserCheckoutJourneyTest -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
+mvn clean test -Dbrowser=firefox -Dfirefox.driver.location=<location_of_geckodriver>
 ```
 
-For Chrome:
+Run a specific test case:
 ```
-mvn clean test  -Dtest=UserCheckoutJourneyTest -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver>
+mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriver> -Dtest=CheckoutOverviewTest#testCheckoutOverview_ItemsAddedArePresentInCheckout_Multiple
 ```
 
-4. Verify test outputs in test-output folder
+4. Verify test outputs in output folder to view html reports

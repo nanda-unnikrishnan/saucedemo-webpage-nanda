@@ -13,7 +13,7 @@ public class YourCartPage extends PageBase {
 	}
 
 	@FindBy(id = "checkout")
-	WebElement checkoutButton;
+	private WebElement checkoutButton;
 
 	public YourInfoPage checkout() {
 		checkoutButton.click();
