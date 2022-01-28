@@ -7,15 +7,29 @@
  5. Checkout
  6. Enter details and Finish the purchase
 
-## Summary of solution
-- Solution written using Selenium WebDriver with Java and executed using TestNG.
-- PageObjectModel pattern used to create page classes
+## Solution
+- This solution is built based on PageObjectModel design pattern with a data driven Framework.
+- Implementation is using Selenium WebDriver(with Java) for scripting, Maven for build and TestNG for execution.
+- Separate page level tests are written independent of each other.
+- The specific user journey from the question is tested under `CheckoutOverViewTest#testCheckoutOverview_ItemsAddedArePresentInCheckout_CheapestAndSecondCostliest`.
 
-- Configurations (browser and webdriver to use, default username, password etc) are provided in config.properties file which can be overriden as a property from command line as well (using -DpropertyName=propertyValue syntax)
+### Data and Configuration files
 
-- A data file contains various sample data for Login page as well as User info page. This is tested in `LoginFunctionalityTest` and `YourInfoPageTest`. This data file location can also be overriden as a property from command line.
+- Below configurations are provided in config.properties file.
+  - browser
+  - location of the associated WebDriver
+  - default username and password (for happy path scenarios)
+  
+  These properties can be overriden while running from the command line (using -DpropertyName=propertyValue).
+  `eg. -Dbrowser=chrome`
+  
+- An excel data file facilitates the input for data driven testing on the text input fields (of the Login and Your Information page) of the application.
+  - `LoginFunctionalityTest` and `YourInfoPageTest` are the ones that are currently implemented as data driven tests.
+  
+  The data file name can also be overriden while running from the command line (using -DpropertyName=propertyValue syntax).
+  `eg. -Dtestdata.filename=<New file name>`
 
-- Exact scenario from question is tested under `CheckoutOverviewTest#testCheckoutOverview_ItemsAddedArePresentInCheckout_Multiple`
+
 
 ## Test execution
 
