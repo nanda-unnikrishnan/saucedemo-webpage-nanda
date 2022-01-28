@@ -66,7 +66,7 @@ mvn clean test -Dbrowser=chrome -Dchrome.driver.location=<location_of_chromedriv
 
 # API Automation 
 
-# Q : Using https://api.spacex.land/graphql/
+## Q : Using https://api.spacex.land/graphql/
 
 - Write a test that queries the API for all launches and returns the number of launches
 - Write a test to update the limit parameter and returns the number of launches Ex: limit=2
@@ -81,7 +81,7 @@ Assertions
 
 ## Solution
 - The API requests pertaining to the 3 tests are created as a collection in Postman
-- The url, `limit` and `offset` are passed to the queries as collection variables.
+- The `spacexApiUrl`, `limit` and `offset` are passed to the requests as collection variables.
 - Tests are written at the collection level as the assertions performed on the responses were common.
 
 ## Test Execution
