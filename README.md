@@ -34,8 +34,8 @@
 
 ### Test execution
 
-1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
-2. Go to directory *global-qa-interview-nanda*
+1. Clone https://github.com/nanda-unnikrishnan/saucedemo-webpage-nanda.git
+2. Go to directory *saucedemo-webpage-nanda*
 3. Execute below command which uses maven (needs to be installed prior) after updating chrome driver location
 ```
 mvn clean test -Dchrome.driver.location=<location_of_chromedriver>
@@ -85,7 +85,7 @@ Assertions
 - Tests are written at the collection level as the assertions performed on the responses were common.
 
 ## Test Execution
-1. Clone https://github.com/nanda-unnikrishnan/global-qa-interview-nanda.git
-2. Go to directory *global-qa-interview-nanda/postman*
+1. Clone https://github.com/nanda-unnikrishnan/saucedemo-webpage-nanda.git
+2. Go to directory *saucedemo-webpage-nanda/postman*
 3. Import json file `Spacex.postman_collection.json` into your postman instance
 4. Run collection
